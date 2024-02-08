@@ -10,6 +10,7 @@ class FinanceDataTransformer(CsvTransformer):
         self.type = type
 
     def getTypeMap(self, type):
+        pass
     
     def transform(self, csv):
         data = self.csvToObject(csv)

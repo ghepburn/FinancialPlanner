@@ -2,7 +2,7 @@ import os
 import pandas as pd
 
 from src.GoogleDrive.GoogleDriveManager import GoogleDriveManager
-from src.FileIdentifiers.CsvFinancialFileIdentifier import CsvFinancialFileIdentifier
+from src.FileIdentifiers import CsvFinancialFileIdentifier
 from src.Transformers import FinancialDataTransformer
 
 class DataManager:

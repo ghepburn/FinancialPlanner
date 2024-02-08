@@ -1,4 +1,4 @@
 from .BaseFileIdentifier import BaseFileIdentifier
 
-class FinancialFileIdentifier(BaseFileIdentifier):
+class BaseFinancialFileIdentifier(BaseFileIdentifier):
     pass

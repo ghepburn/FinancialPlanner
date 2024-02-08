@@ -10,11 +10,11 @@ from src.Logger import Logger
 def main():
     logger = Logger()
     configs = Configs(logger)
-    dataManager = DataManager(logger, configs)
+    # dataManager = DataManager(logger, configs)
 
     # dataManager.deleteData()
     # dataManager.createDirectory()
-    dataManager.downloadData()
+    # dataManager.downloadData()
     # client.get("Finances")
     # print("RAN GOOGLE CLIENT BRAH")
 
