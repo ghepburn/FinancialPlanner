@@ -1,1 +1,1 @@
-from .FinancialDataTransformer import FinanceDataTransformer
+from .FinancialDataTransformer import FinancialDataTransformer

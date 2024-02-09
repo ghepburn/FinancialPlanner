@@ -1,1 +1,1 @@
-from .CsvFinancialFileIdentifier import CsvFinancialFileIdentifer
+from .FinancialFileIdentifier import FinancialFileIdentifier

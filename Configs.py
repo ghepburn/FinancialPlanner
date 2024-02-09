@@ -9,13 +9,26 @@ class Configs:
         "DESIRED_GOOGLE_DRIVE_DOWNLOADED_FILE_TYPE": "text/csv",
         "TEST_GOOGLE_DRIVE_FILE_ID": "",
         
-        # Financial File Types
-        "FINANCIAL_FILE_TYPES": [
-            "BMO_CHEQUINGS_FILE_TYPE", 
-            "BMO_CREDIT_CARD_FILE_TYPE"
+        "SUPPORTED_FILE_TYPES": [
+            "BMO_CHEQUINGS_FILE", 
+            "BMO_CREDIT_CARD_FILE"
         ],
 
-        # Column Mapping
+        # File Column Mappings
+        "BMO_CHEQUINGS_FILE_COLUMNS": ["CARD_NUMBER", "TRANSACTION_TYPE", "POST_DATE", "TRANSACTION_AMOUNT", "DESCRIPTION"],
+        "BMO_CREDIT_CARD_FILE_COLUMNS": ["ITEM_NUMBER", "CARD_NUMBER", "TRANSACTION_DATE", "TRANSACTION_MONTH", "POST_DATE", "TRANSACTION_AMOUNT", "DESCRIPTION"],
+
+        # Column Details
+        "COLUMN_DETAILS": {
+            "CARD_NUMBER": {"type": str, "length": 18}, #Ex: 4015202031314545
+            "TRANSACTION_TYPE": {"type": str, "length": [5, 6], "options": ["DEBIT", "CREDIT"]}, #Ex: DEBIT
+            "POST_DATE": {"type": str, "length": 8}, #YYYYMMDD Ex: 20240101
+            "TRANSACTION_AMOUNT": {"type": str, "length": [0, 16]}, #Ex: 200
+            "DESCRIPTION": {"type": str, "length": [0, 1000]},
+            "ITEM_NUMBER": {"type": str, "length": [0, 3]}, #Ex: 30
+            "TRANSACTION_DATE": {"type": str, "length": 8}, #YYYYMMDD Ex: 20240101
+            "TRANSACTION_MONTH": {"type": str, "length": 2}, #Ex: 05
+        }
         
         
     }

@@ -1,9 +1,9 @@
 from .CsvTransformer import CsvTransformer
 
-class FinanceDataTransformer(CsvTransformer):
+class FinancialDataTransformer(CsvTransformer):
 
     def __init__(self, logger, configs):
-        CsvTransformer().__init__(logger, configs)
+        super().__init__(logger, configs)
         self.type = None
 
     def setType(self, type):
@@ -12,9 +12,8 @@ class FinanceDataTransformer(CsvTransformer):
     def getTypeMap(self, type):
         pass
     
-    def transform(self, csv):
-        data = self.csvToObject(csv)
-        print(data[0])
+    def transform(self, data):
+        self.logger.debug("FinancialDataTransformer.transform()")
         
         self.getTypeMap(self.type)
         

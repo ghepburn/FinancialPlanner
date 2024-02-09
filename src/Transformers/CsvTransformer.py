@@ -1,15 +1,16 @@
-import json
-
 from .BaseTransformer import BaseTransformer
 
 class CsvTransformer(BaseTransformer): 
 
 
     def csvToObject(self, csv):
-        result = []
+        self.logger.debug("CsvTransformer.csvToObject()")
 
-        for row in csv:
-            dict = json.dumps(csv)
-            result.append(dict)
+        data = []
+       
+        rows = csv.split("\n")
+        for row in rows:
+            rowData = row.split(",")
+            data.append(rowData)
 
-        return result
+        return data

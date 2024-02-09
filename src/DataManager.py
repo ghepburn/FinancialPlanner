@@ -2,7 +2,7 @@ import os
 import pandas as pd
 
 from src.GoogleDrive.GoogleDriveManager import GoogleDriveManager
-from src.FileIdentifiers import CsvFinancialFileIdentifier
+from src.FileIdentifiers import FinancialFileIdentifier
 from src.Transformers import FinancialDataTransformer
 
 class DataManager:
@@ -15,7 +15,7 @@ class DataManager:
         self.google_drive_directory_path = configs.get("GOOGLE_DRIVE_DIRECTORY_PATH")
 
         self.googleDriveManager = GoogleDriveManager(logger, configs)
-        self.identifier = CsvFinancialFileIdentifier(logger, configs)
+        self.identifier = FinancialFileIdentifier(logger, configs)
         self.transformer = FinancialDataTransformer(logger, configs)
 
     def deleteData(self):
@@ -59,12 +59,14 @@ class DataManager:
                 fileBytes = self.googleDriveManager.get(id)
                 csv = fileBytes.decode()
 
+                data = self.transformer.csvToObject(csv)
+
                 # Identify Data Type
-                fileType = self.identifier.getFileType(csv)
+                fileType = self.identifier.getFileType(data)
 
                 # Transform Data
                 self.transformer.setType(fileType)
-                transformedData = self.transformer.transform(csv)
+                transformedData = self.transformer.transform(data)
 
                 data.append(transformedData)
 
