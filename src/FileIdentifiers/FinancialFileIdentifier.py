@@ -27,9 +27,9 @@ class FinancialFileIdentifier(BaseFileIdentifier):
                 if type(columnDetails["length"]) == int:
                     isSameLength = (len(row[index]) == columnDetails["length"])
                 else:
-                    isMinimumLength = (len(row[index]) > columnDetails["length"][0])
-                    isNotMaximumLength = (len(row[index]) < columnDetails["length"][-1])
-                    isSameLength = (isMinimumLength and isNotMaximumLength)
+                    isMinimumLength = (len(row[index]) >= columnDetails["length"][0])
+                    isNotOverMaximumLength = (len(row[index]) <= columnDetails["length"][-1])
+                    isSameLength = (isMinimumLength and isNotOverMaximumLength)
                 if not isSameLength:
                     self.logger.debug("CsvFinancialFileIdentifer.isFileType() " + columnName + " length (" + str(len(row[index])) + ") is invalid")
                     return False

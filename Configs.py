@@ -20,7 +20,7 @@ class Configs:
 
         # Column Details
         "COLUMN_DETAILS": {
-            "CARD_NUMBER": {"type": str, "length": 18}, #Ex: 4015202031314545
+            "CARD_NUMBER": {"type": str, "length": 17}, #Ex: 4015202031314545
             "TRANSACTION_TYPE": {"type": str, "length": [5, 6], "options": ["DEBIT", "CREDIT"]}, #Ex: DEBIT
             "POST_DATE": {"type": str, "length": 8}, #YYYYMMDD Ex: 20240101
             "TRANSACTION_AMOUNT": {"type": str, "length": [0, 16]}, #Ex: 200
