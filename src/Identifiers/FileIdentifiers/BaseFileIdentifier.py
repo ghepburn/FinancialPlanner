@@ -2,9 +2,10 @@
 
 class BaseFileIdentifier:
 
-    def __init__(self, logger, configs):
+    def __init__(self, logger, configs, columnIdentifier):
         self.logger = logger
         self.configs = configs
+        self.columnIdentifier = columnIdentifier
 
     def isFileType(self, fileType):
         return False
@@ -30,3 +31,20 @@ class BaseFileIdentifier:
             return fileType
         except Exception as e:
             self.logger.error("BaseFileIdentigier.getFileType() Error", e)
+
+    def fileHasHeaders(self, file, fileType):
+        try:
+            fileColumns = self.configs.get(fileType + "_COLUMNS")
+            firstRow = file[0]
+
+            for index, item in enumerate(firstRow):
+                columnName = fileColumns[index]
+                isColumn = self.columnIdentifier.isColumn(columnName, item)
+                if not isColumn:
+                    return True
+            
+            return False
+        except Exception as e:
+            self.logger.error("BaseFileIdentifier.fileHasHeaders() Error", e)
+            return False
+    
