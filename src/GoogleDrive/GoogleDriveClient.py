@@ -62,7 +62,7 @@ class GoogleDriveClient:
                 
             else:
                 self.logger.info("GoogleDriveClient.get() Found " + str(len(items)) + " items with query " + query)
-                self.logger.info(items)
+                self.logger.debug(items)
 
             return items
         except Exception as e:
@@ -80,9 +80,9 @@ class GoogleDriveClient:
             items = results.get("files", [])
 
             if not items:
-                self.logger.info("GoogleDriveClient.getFolderChildren() item not found with query " + query)
+                self.logger.debug("GoogleDriveClient.getFolderChildren() item not found with query " + query)
             else:
-                self.logger.info("GoogleDriveClient.getFolderChildren() Found " + str(len(items)) + " items with query " + query)
+                self.logger.debug("GoogleDriveClient.getFolderChildren() Found " + str(len(items)) + " items with query " + query)
 
             return items
         except Exception as e:

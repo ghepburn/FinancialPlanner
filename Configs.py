@@ -8,17 +8,17 @@ class Configs:
         "LOCAL_DATA_FILE_NAME": "data.csv",
         "GOOGLE_DRIVE_DIRECTORY_PATH": [],
         "DESIRED_GOOGLE_DRIVE_DOWNLOADED_FILE_TYPE": "text/csv",
+        "USE_TEST_FILE": False, # Will retreive TEST_GOOGLE_DRIVE_FILE_ID rather then retreieve all files
         "TEST_GOOGLE_DRIVE_FILE_ID": "",
+        "USE_CACHE": True, # Will not retreive files from Google Drive if we have them stored
         "CHARACTERS_TO_REMOVE": ["\"", "'", "[", "]", "\r", "  "],
+        "LOG_DEBUG": False,
         
-        "SUPPORTED_FILE_TYPES": [
-            "BMO_CHEQUINGS", 
-            "BMO_CREDIT_CARD"
-        ],
+        "SUPPORTED_FILE_TYPES": [],
 
         # File Column Mappings
         "BMO_CHEQUINGS_COLUMNS": ["CARD_NUMBER", "TRANSACTION_TYPE", "POST_DATE", "TRANSACTION_AMOUNT", "DESCRIPTION"],
-        "BMO_CREDIT_CARD_COLUMNS": ["ITEM_NUMBER", "CARD_NUMBER", "TRANSACTION_DATE", "TRANSACTION_MONTH", "POST_DATE", "TRANSACTION_AMOUNT", "DESCRIPTION"],
+        "BMO_CREDIT_CARD_COLUMNS": ["ITEM_NUMBER", "CARD_NUMBER", "TRANSACTION_DATE", "POST_DATE", "TRANSACTION_AMOUNT", "DESCRIPTION"],
 
         # Column Details
             # Type: Python type - Example: str
@@ -31,7 +31,6 @@ class Configs:
             "DESCRIPTION": {"type": str, "length": [0, 1000]},
             "ITEM_NUMBER": {"type": str, "length": [0, 3]}, #Ex: 30
             "TRANSACTION_DATE": {"type": str, "length": 8}, #YYYYMMDD Ex: 20240101
-            "TRANSACTION_MONTH": {"type": str, "length": 2}, #Ex: 05
             "SOURCE": {"type": str, "length":[1, 15]} #SUPPORT_FILE_TYES enum Ex: BMO_CHEQUINGS
         },
 
@@ -46,12 +45,11 @@ class Configs:
         
     }
     
-    def __init__(self, logger):
-        self.logger = logger
+    def __init__(self):
         self.loadSecrets()
 
     def loadSecrets(self):
-        self.logger.debug("Configs.loadSecrets()")
+        print("Configs.loadSecrets()")
         
         f = open("secrets.json", "r")
         jsonSecrets = f.read()
@@ -60,10 +58,10 @@ class Configs:
         for key in secrets.keys():
             self.values[key] = secrets[key]
 
-        self.logger.debug("Configs.loadSecrets() Secrets Set")
+        print("Configs.loadSecrets() Secrets Set")
         
     def get(self, name):
         try:
             return self.values[name]
         except Exception as e:
-            self.logger.error("Error name config does not exist. ", e)
+            print("Error name config does not exist. ", e)

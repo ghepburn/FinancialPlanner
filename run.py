@@ -8,13 +8,11 @@ from src.Logger import Logger
 
 
 def main():
-    logger = Logger()
-    configs = Configs(logger)
+    configs = Configs()
+    logger = Logger(configs)
     dataManager = DataManager(logger, configs)
 
-    # dataManager.deleteData()
-    # dataManager.createDirectory()
-    dataManager.downloadData()
+    dataManager.getData()
     # client.get("Finances")
     # print("RAN GOOGLE CLIENT BRAH")
 

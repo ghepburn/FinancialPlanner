@@ -24,7 +24,7 @@ class BaseFileIdentifier:
                     break
             
             if fileType is None:
-                self.logger.info("BaseFileIdentifier.getFileType() No file type could be identified.")
+                self.logger.info("BaseFileIdentifier.getFileType() No file type could be identified for.")
             else:
                 self.logger.debug("BaseFileIdentifier.getFileType() type is " + fileType)
 
