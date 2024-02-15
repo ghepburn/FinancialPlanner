@@ -1,6 +1,6 @@
 data/*
 token.json
 credentials.json
-secrets
+secrets.json
 venv
 __pycache__
