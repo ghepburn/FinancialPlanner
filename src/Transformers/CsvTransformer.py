@@ -1,5 +1,7 @@
 from .BaseTransformer import BaseTransformer
 
+import csv
+
 class CsvTransformer(BaseTransformer): 
 
 

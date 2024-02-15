@@ -10,24 +10,26 @@ class FinancialDataTransformer(CsvTransformer):
         self.inputColumns = []
 
     def setHasHeaders(self, hasHeaders):
+        self.logger.debug("FinancialDataTransformer.setHasHeaders() " + str(hasHeaders))
         self.hasHeaders = hasHeaders
 
     def setType(self, type):
+        self.logger.debug("FinancialDataTransformer.setType() " + type)
         self.type = type
         self.inputColumns = self.configs.get(self.type + "_COLUMNS")
     
-    def removeHeaders(self, data):
+    def removeHeader(self, data):
+        self.logger.debug("FinancialDataTransformer.removeHeader()")
         if self.hasHeaders:
             data = data[1:]
         return data
     
-    def applyHeader(self, data):
-        return [self.outputColumns] + data
+    def applyHeader(self, array):
+        array.append(self.outputColumns)
+        return array
     
     def buildColumnMapValue(self, columnName):
         try:
-            self.logger.debug("FinancialDataTransformer.buildColumnMapValue() " + columnName)
-
             # Try to use another "interchangeable" column instead
             interchangeableColumns = self.configs.get("INTERCHANGEABLE_COLUMNS")
             isInterchangeableColumn = columnName in list(interchangeableColumns.keys())
@@ -50,11 +52,8 @@ class FinancialDataTransformer(CsvTransformer):
             self.logger.error("FinancialDataTransformer.buildColumnMapValue() Error", e)
             return "DEFAULT"
     
-    # Transform data using a map
-    # maps built from self.getTransformationMap
-    # string values are applied to every row
-    # otherwise, the value is an index and we grab an existing column
-    def applyTransformationMap(self, transformationMap, data):
+    # Retreives and organizes the order of columns using a pre-built map
+    def applyColumnMap(self, columnMap, data):
         try:
 
             transformedData = []
@@ -62,7 +61,7 @@ class FinancialDataTransformer(CsvTransformer):
             for row in data:
                 transformedRow = []
 
-                for valueOrIndex in transformationMap:
+                for valueOrIndex in columnMap:
                     if type(valueOrIndex) == str:
                         transformedRow.append(valueOrIndex)
                     else:
@@ -76,8 +75,8 @@ class FinancialDataTransformer(CsvTransformer):
             self.logger.error("FinancialDataTransformer.applyTransformationMap() Error", e)
             return data
 
-    
-    def getTransformationMap(self, data):
+    # builds a map instructing how to reorder columns
+    def getColumnMap(self, data):
         transformationMap = []
 
         for outputColumn in self.outputColumns:
@@ -96,25 +95,45 @@ class FinancialDataTransformer(CsvTransformer):
                 transformationMap.append(columnMapValue)
             
         return transformationMap
+    
+    #Transform single value
+    def transformValue(self, value):
+        charactersToRemove = self.configs.get("CHARACTERS_TO_REMOVE")
+
+        for character in charactersToRemove:
+            value = value.replace(character, "")
+        
+        return value
             
     # Transform data into desired format
-        # Step #1 Define columns
-        # Step #2 Correct formatting in each column
     def transform(self, data):
         try:
             self.logger.debug("FinancialDataTransformer.transform()")
+            
+            charactersToRemove = self.configs.get("CHARACTERS_TO_REMOVE")
 
-            data = self.removeHeaders(data)
+            for rowIndex in range(len(data)):
+                row = data[rowIndex]
+                for columnIndex in range(len(row)):
+                    column = row[columnIndex]
+                    newColumn = self.transformValue(column)
+                    row[columnIndex] = newColumn
 
-            transfomrationMap = self.getTransformationMap(data)
+            return data
+        except Exception as e:
+            self.logger.error("FinancialDataTransformer.transform() Error", e)
+            return data
+    
+    # Transform data into standard set of columns ("OUTPUT_COLUMNS")
+    def standardize(self, data):
+        try:
+            self.logger.debug("FinancialDataTransformer.standardize()")
 
-            transformedData = self.applyTransformationMap(transfomrationMap, data)
+            columnMap = self.getColumnMap(data)
 
-            transformedDataWithHeader = self.applyHeader(transformedData)
+            standardizedData = self.applyColumnMap(columnMap, data)
 
-            self.logger.debug(transformedDataWithHeader)
-
-            return transformedDataWithHeader
+            return standardizedData
         except Exception as e:
             self.logger.error("FinancialDataTransformer.transform() Error", e)
             return data

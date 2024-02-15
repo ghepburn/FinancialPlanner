@@ -5,9 +5,11 @@ import json
 class Configs:
     values = {
         "LOCAL_DATA_DIRECTORY": "./data",
+        "LOCAL_DATA_FILE_NAME": "data.csv",
         "GOOGLE_DRIVE_DIRECTORY_PATH": [],
         "DESIRED_GOOGLE_DRIVE_DOWNLOADED_FILE_TYPE": "text/csv",
         "TEST_GOOGLE_DRIVE_FILE_ID": "",
+        "CHARACTERS_TO_REMOVE": ["\"", "'", "[", "]", "\r", "  "],
         
         "SUPPORTED_FILE_TYPES": [
             "BMO_CHEQUINGS", 

@@ -1,5 +1,5 @@
 import os
-import pandas as pd
+import csv
 
 from src.GoogleDrive.GoogleDriveManager import GoogleDriveManager
 from src.Identifiers import FinancialFileIdentifier
@@ -42,9 +42,27 @@ class DataManager:
     def save(self, data):
         self.logger.debug("DataManager.save()")
         try:
-            return data
+            directory = self.configs.get("LOCAL_DATA_DIRECTORY")
+            fileName = self.configs.get("LOCAL_DATA_FILE_NAME")
+            with open(directory + "/" + fileName, 'w') as file:
+                writer = csv.writer(file)
+                for row in data:
+                    writer.writerow(row)
         except Exception as e:
-            self.logger.error("DataManager.save() Failed.", e)
+            self.logger.error("DataManager.save() Error ", e)
+
+    def combineData(self, data):
+        self.logger.debug("DataManager.combineData()")
+
+        combinedData = []
+
+        combinedData = self.transformer.applyHeader(combinedData)
+        
+        for file in data:
+            for row in file:
+                combinedData.append(row)
+        
+        return combinedData
 
     def downloadData(self):
         self.logger.debug("DataManager.downloadData()")
@@ -57,7 +75,7 @@ class DataManager:
             fileIds = [self.configs.get("TEST_GOOGLE_DRIVE_FILE_ID")]
 
             # Get Data
-            data = []
+            csvFiles = []
             for id in fileIds:
                 fileBytes = self.googleDriveManager.get(id)
                 csv = fileBytes.decode()
@@ -71,12 +89,14 @@ class DataManager:
                 # Transform Data
                 self.transformer.setType(fileType)
                 self.transformer.setHasHeaders(fileHasHeaders)
-                transformedData = self.transformer.transform(data)
+                dataWithoutHeader = self.transformer.removeHeader(data)
+                standardizedData = self.transformer.standardize(dataWithoutHeader)
+                transformedData = self.transformer.transform(standardizedData)
 
-                data.append(transformedData)
+                csvFiles.append(transformedData)
 
             # Combine Data
-            data = self.combineData(transformedData)
+            data = self.combineData(csvFiles)
 
             # Save Data
             self.save(data)
