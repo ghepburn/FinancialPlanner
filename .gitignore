@@ -2,5 +2,6 @@ data/*
 token.json
 credentials.json
 secrets.json
-venv
+env
+logs/*
 __pycache__
