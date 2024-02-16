@@ -21,7 +21,7 @@ def main():
     # download data
     # combine data
     # accept queries on data
-
+    logger.getCapturedErrors()
     print("Done run.py")
 
 if __name__ == "__main__":

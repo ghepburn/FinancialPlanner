@@ -1,18 +1,25 @@
 
 
 import json
+import datetime
 
 class Configs:
     values = {
+        # Behaviour
+        "USE_TEST_FILE": False, # Will retreive TEST_GOOGLE_DRIVE_FILE_ID rather then retreieve all files
+        "USE_CACHE": False, # Will not retreive files from Google Drive if we have them stored
+        "LOG_DEBUG": True,
+        "LOG_TO_FILE": True,
+
+        # Confgurations
         "LOCAL_DATA_DIRECTORY": "./data",
         "LOCAL_DATA_FILE_NAME": "data.csv",
+        "ERROR_FILE": "./logs/",
+        "LOG_FILE": "./logs/",
         "GOOGLE_DRIVE_DIRECTORY_PATH": [],
         "DESIRED_GOOGLE_DRIVE_DOWNLOADED_FILE_TYPE": "text/csv",
-        "USE_TEST_FILE": False, # Will retreive TEST_GOOGLE_DRIVE_FILE_ID rather then retreieve all files
         "TEST_GOOGLE_DRIVE_FILE_ID": "",
-        "USE_CACHE": True, # Will not retreive files from Google Drive if we have them stored
         "CHARACTERS_TO_REMOVE": ["\"", "'", "[", "]", "\r", "  "],
-        "LOG_DEBUG": False,
         
         "SUPPORTED_FILE_TYPES": [],
 
@@ -41,12 +48,20 @@ class Configs:
 
         # Desired Format
         "OUTPUT_COLUMNS": ["SOURCE", "TRANSACTION_DATE", "TRANSACTION_AMOUNT", "DESCRIPTION"]
-        
-        
     }
     
     def __init__(self):
+        self.dateToday = datetime.datetime.today().strftime('%Y%m%d')
+        self.timestamp = str(datetime.datetime.now()).replace(" ", "").replace("-", "").replace(":", "").replace(".", "")
+
+        self.loadDynamicConfigs()
         self.loadSecrets()
+
+    def loadDynamicConfigs(self):
+        print("Configs.loadDynamicConfigs()")
+        self.values["LOG_FILE"] = self.values["LOG_FILE"] + self.timestamp + ".log"
+        self.values["ERROR_FILE"] = self.values["ERROR_FILE"] + "errors." + self.timestamp + ".log"
+
 
     def loadSecrets(self):
         print("Configs.loadSecrets()")

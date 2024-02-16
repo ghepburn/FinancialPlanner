@@ -68,7 +68,7 @@ class FinancialDataTransformer(CsvTransformer):
                         outputColumnValue = row[valueOrIndex]
                         transformedRow.append(outputColumnValue)
                     
-                    transformedData.append(transformedRow)
+                transformedData.append(transformedRow)
             
             return transformedData
         except Exception as e:
@@ -76,7 +76,7 @@ class FinancialDataTransformer(CsvTransformer):
             return data
 
     # builds a map instructing how to reorder columns
-    def getColumnMap(self, data):
+    def getColumnMap(self):
         transformationMap = []
 
         for outputColumn in self.outputColumns:
@@ -129,7 +129,7 @@ class FinancialDataTransformer(CsvTransformer):
         try:
             self.logger.debug("FinancialDataTransformer.standardize()")
 
-            columnMap = self.getColumnMap(data)
+            columnMap = self.getColumnMap()
 
             standardizedData = self.applyColumnMap(columnMap, data)
 

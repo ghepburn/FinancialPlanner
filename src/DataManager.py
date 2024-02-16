@@ -1,5 +1,6 @@
 import os
 import csv
+import shutil
 
 from src.GoogleDrive.GoogleDriveManager import GoogleDriveManager
 from src.Identifiers import FinancialFileIdentifier
@@ -27,7 +28,7 @@ class DataManager:
         self.logger.debug("DataManager.deleteData()")
         try:
             if self.data_directory is not None:
-                os.rmdir(self.data_directory)
+                shutil.rmtree(self.data_directory)
                 self.logger.info(self.data_directory + " was deleted.")
         except Exception as e: 
             self.logger.error("Error during dataManager.deleteData()", e)
@@ -81,6 +82,10 @@ class DataManager:
             csvFiles = []
             for id in fileIds:
                 fileBytes = self.googleDriveManager.get(id)
+                if isinstance(fileBytes, Exception):
+                    self.logger.captureError(fileBytes, [id])
+                    continue
+        
                 csv = fileBytes.decode()
 
                 data = self.transformer.csvToObject(csv)
@@ -92,6 +97,7 @@ class DataManager:
                 # Transform Data
                 self.transformer.setType(fileType)
                 self.transformer.setHasHeaders(fileHasHeaders)
+
                 dataWithoutHeader = self.transformer.removeHeader(data)
                 standardizedData = self.transformer.standardize(dataWithoutHeader)
                 transformedData = self.transformer.transform(standardizedData)

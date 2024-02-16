@@ -90,11 +90,15 @@ class GoogleDriveClient:
             return
     
     def download(self, id, type):
-        self.logger.debug("GoogleDriveClient.download() " + type)
-        service = self.getService()
-        
-        results = service.files().export_media(fileId=id, mimeType=type).execute()
-        if results:
-            self.logger.info("GoogleDriveClient.download() Downloaded " + type + " " + id)
-        
-        return results
+        try:
+            self.logger.debug("GoogleDriveClient.download() " + type)
+            service = self.getService()
+            
+            results = service.files().export_media(fileId=id, mimeType=type).execute()
+            if results:
+                self.logger.info("GoogleDriveClient.download() Downloaded " + type + " " + id)
+            
+            return results
+        except Exception as e:
+            self.logger.error("GoogleDriveClient.download() Error", e)
+            return e
